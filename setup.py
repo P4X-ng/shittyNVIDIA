@@ -41,10 +41,6 @@ setup(
     ],
     keywords='nvidia gpu driver humor satire',
     license='MIT',
-    scripts=['install-nvidia-compat.sh'],
-    entry_points={
-        'console_scripts': [
-            'shitty-nvidia-info=shitty_nvidia:get_driver_info',
-        ],
-    },
+    # Note: Install script should be run manually with: ./install-nvidia-compat.sh
+    # See README.md for installation instructions
 )

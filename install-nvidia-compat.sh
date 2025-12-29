@@ -170,8 +170,11 @@ uninstall_shitty_nvidia() {
     sudo rm -rf /usr/local/shittyNVIDIA
     sudo rm -f /etc/modprobe.d/shitty-nvidia-blacklist.conf
     
-    # Remove from bashrc
-    sed -i '/shittyNVIDIA/d' ~/.bashrc 2>/dev/null || true
+    # Remove from bashrc - remove exact export statements
+    if [ -f ~/.bashrc ]; then
+        sed -i '\|export PATH="/usr/local/shittyNVIDIA/bin:$PATH"|d' ~/.bashrc
+        sed -i '\|export LD_LIBRARY_PATH="/usr/local/shittyNVIDIA/lib64:$LD_LIBRARY_PATH"|d' ~/.bashrc
+    fi
     
     log_success "shittyNVIDIA uninstalled"
 }

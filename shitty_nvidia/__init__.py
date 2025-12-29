@@ -28,13 +28,12 @@ def check_compatibility():
               False if NVIDIA devices are found (incompatible)
     """
     import subprocess
+    import shutil
     
     # Check for nvidia-smi
     try:
-        result = subprocess.run(['which', 'nvidia-smi'], 
-                              capture_output=True, 
-                              text=True)
-        if result.returncode == 0:
+        nvidia_smi_path = shutil.which('nvidia-smi')
+        if nvidia_smi_path:
             # Found nvidia-smi - check if it's ours
             result = subprocess.run(['nvidia-smi'], 
                                   capture_output=True, 
@@ -43,7 +42,7 @@ def check_compatibility():
                 return True
             else:
                 return False  # Real NVIDIA detected
-    except:
+    except Exception:
         pass
     
     # Check for NVIDIA hardware via lspci
@@ -53,7 +52,7 @@ def check_compatibility():
                               text=True)
         if 'nvidia' in result.stdout.lower():
             return False  # NVIDIA hardware found
-    except:
+    except Exception:
         pass
     
     # No NVIDIA found - perfect!
