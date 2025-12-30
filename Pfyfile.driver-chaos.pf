@@ -1,0 +1,81 @@
+# Driver Chaos Tasks
+# When things go horribly, horribly wrong
+
+task driver-load-failure
+  describe Attempt to load kernel module (will fail spectacularly)
+  shell_lang bash
+  shell echo "Loading nvidia kernel module..." && \
+        echo "modprobe: ERROR: Module 'nvidia' not found" && \
+        echo "modprobe: ERROR: Module 'nvidia-drm' causes kernel panic" && \
+        echo "modprobe: ERROR: Module 'nvidia-uvm' summons void" && \
+        echo "Driver loading failed successfully!"
+end
+
+task driver-kernel-panic
+  describe Simulate a kernel panic (safely, of course)
+  shell_lang bash
+  shell echo "Initializing driver..." && \
+        echo "Kernel panic - not syncing: NVIDIA driver catastrophic failure" && \
+        echo "RIP: nvidia_init+0x666/0xdead" && \
+        echo "Modules linked in: despair hopelessness regret" && \
+        echo "(Don't worry, this is just a simulation. The real panic comes later.)"
+end
+
+task driver-memory-leak
+  describe Demonstrate memory leak features
+  shell_lang bash
+  shell echo "Starting memory leak simulation..." && \
+        echo "Allocated: 1 GB... 2 GB... 4 GB... 8 GB..." && \
+        echo "Your system is now out of memory" && \
+        echo "But at least the driver is consistent!"
+end
+
+task driver-random-crash
+  describe Crash at random intervals for maximum frustration
+  shell_lang bash
+  shell echo "Running stable driver..." && \
+        sleep $((RANDOM % 3 + 1)) && \
+        echo "Segmentation fault" && \
+        echo "Driver crashed! (This is a feature, not a bug)"
+end
+
+task driver-conflict-resolution
+  describe Resolve driver conflicts (by making more conflicts)
+  shell_lang bash
+  shell echo "Checking for conflicts..." && \
+        echo "Conflict with: nouveau (fighting for dominance)" && \
+        echo "Conflict with: X server (refuses to cooperate)" && \
+        echo "Conflict with: reality (fundamental incompatibility)" && \
+        echo "Resolution: Maximum chaos achieved!"
+end
+
+task driver-log-spam
+  describe Generate massive amounts of useless log spam
+  shell_lang bash
+  shell for i in {1..50}; do \
+          echo "[ERROR] NVIDIA: Failed to initialize device ${i}/0" && \
+          echo "[WARN] NVIDIA: Something went wrong but we don't know what" && \
+          echo "[INFO] NVIDIA: Still not working" && \
+          echo "[DEBUG] NVIDIA: Why are you even reading this?"; \
+        done | head -20 && echo "... (10000 more lines of useless errors)"
+end
+
+task driver-temperature-sensor
+  describe Read GPU temperature (returns impossible values)
+  shell_lang bash
+  shell echo "Reading GPU temperature..." && \
+        echo "Current temperature: -273°C (absolute zero achieved!)" && \
+        echo "Maximum temperature: ∞°C" && \
+        echo "Fan speed: 200% (fans have achieved orbit)" && \
+        echo "Thermal management: nonexistent"
+end
+
+task driver-zombie-process
+  describe Create zombie NVIDIA processes
+  shell_lang bash
+  shell echo "Starting nvidia-smi..." && \
+        echo "Process entered zombie state" && \
+        echo "Process cannot be killed" && \
+        echo "Process haunts system forever" && \
+        echo "You'll need to reboot. Good luck!"
+end

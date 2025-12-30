@@ -1,0 +1,74 @@
+# NVIDIA Failure Tasks
+# Guaranteed to fail in creative ways
+
+task nvidia-check-version
+  describe Check NVIDIA driver version (returns nonsense)
+  shell_lang bash
+  shell echo "nvidia-smi version: ERROR_404_DRIVER_NOT_FOUND" && \
+        echo "Driver version: -1.0.broken" && \
+        echo "CUDA version: NaN"
+end
+
+task nvidia-list-gpus
+  describe List all NVIDIA GPUs (there are none)
+  shell_lang bash
+  shell echo "Scanning for NVIDIA GPUs..." && \
+        sleep 1 && \
+        echo "Found 0 devices" && \
+        echo "(This is actually accurate for once)"
+end
+
+task nvidia-stress-test
+  describe Run stress test on NVIDIA GPU (will crash immediately)
+  shell_lang bash
+  shell echo "Starting GPU stress test..." && \
+        echo "Segmentation fault (core dumped)" && \
+        echo "Just kidding! There's no driver to crash."
+end
+
+task nvidia-benchmark
+  describe Benchmark NVIDIA GPU performance
+  shell_lang bash
+  shell echo "Running benchmark..." && \
+        echo "FPS: 0" && \
+        echo "GPU utilization: N/A" && \
+        echo "Memory bandwidth: 0 GB/s" && \
+        echo "Score: FAIL/10"
+end
+
+task nvidia-enable-persistence
+  describe Enable NVIDIA persistence mode (does nothing)
+  shell_lang bash
+  shell echo "Enabling NVIDIA persistence mode..." && \
+        echo "ERROR: Cannot enable persistence for nonexistent driver" && \
+        echo "But don't worry, nothing was persistent anyway!"
+end
+
+task nvidia-cuda-test
+  describe Test CUDA functionality
+  shell_lang bash
+  shell echo "Testing CUDA..." && \
+        echo "nvcc: command not found" && \
+        echo "cuda-gdb: command not found" && \
+        echo "Common sense: not found" && \
+        echo "This driver really is that bad!"
+end
+
+task nvidia-power-management
+  describe Configure power management (breaks everything)
+  shell_lang bash
+  shell echo "Configuring power management..." && \
+        echo "Setting power limit to: undefined" && \
+        echo "Setting clock speeds to: random" && \
+        echo "Your GPU now draws negative watts. Physics is broken."
+end
+
+task nvidia-display-config
+  describe Configure display settings
+  shell_lang bash
+  shell echo "Configuring displays..." && \
+        echo "Resolution: 640x480 (maximum capability)" && \
+        echo "Refresh rate: variable between 0-1 Hz" && \
+        echo "Color depth: 2 bits (4 colors total)" && \
+        echo "Your monitor is now as disappointed as you are."
+end
