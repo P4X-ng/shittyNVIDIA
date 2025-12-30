@@ -48,6 +48,32 @@ Because sometimes you need a driver that:
 3. Makes you laugh about it
 4. **🆕 Teaches you what real drivers actually do**
 
+## Real GPU Driver Analysis
+
+But seriously, if you want to understand how **real** GPU drivers work, we've done the hard work for you:
+
+📚 **[Driver Analysis Documentation](drivers/)**
+
+- **[NVIDIA Open Source Driver Analysis](drivers/nvidia/)** - Deep dive into NVIDIA's open-gpu-kernel-modules
+  - Complete IOCTL reference for CUDA operations
+  - UVM (Unified Virtual Memory) architecture
+  - GSP firmware interaction
+  - Command submission workflow
+  
+- **[AMD AMDGPU Driver Analysis](drivers/amd/)** - Analysis of the AMD open source driver
+  - DRM/GEM IOCTL interface
+  - ROCm compute stack
+  - Memory domain management
+  - Hardware IP blocks
+  
+- **[NVIDIA vs AMD Comparison](drivers/COMPARISON.md)** - Side-by-side comparison
+  - IOCTL architecture differences
+  - CUDA vs ROCm workflows
+  - Performance characteristics
+  - Developer experience
+
+This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD open source GPU drivers, perfect for understanding GPU kernel interfaces, driver development, or just being curious about how your GPU actually talks to the kernel!
+
 ## Installation
 
 ### Requirements
