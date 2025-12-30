@@ -4,7 +4,6 @@ Simple validator for .pf task files
 Tests that the files have valid syntax and structure
 """
 
-import re
 import sys
 from pathlib import Path
 
@@ -13,13 +12,14 @@ def validate_pf_file(filepath):
     errors = []
     warnings = []
     
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
         lines = content.split('\n')
     
     # Check for balanced task/end blocks
     task_stack = []
     task_count = 0
+    includes = []
     
     for i, line in enumerate(lines, 1):
         line = line.strip()
@@ -28,8 +28,20 @@ def validate_pf_file(filepath):
         if not line or line.startswith('#'):
             continue
         
+        # Check for include statements
+        if line.startswith('include '):
+            include_file = line.split()[1] if len(line.split()) > 1 else None
+            if include_file:
+                includes.append((include_file, i))
+                # Check if included file exists
+                include_path = Path(filepath).parent / include_file
+                if not include_path.exists():
+                    warnings.append(f"Line {i}: Included file '{include_file}' not found")
+            else:
+                errors.append(f"Line {i}: 'include' without filename")
+        
         # Check for task definitions
-        if line.startswith('task '):
+        elif line.startswith('task '):
             task_name = line.split()[1] if len(line.split()) > 1 else None
             if task_name:
                 task_stack.append((task_name, i))
@@ -62,6 +74,7 @@ def validate_pf_file(filepath):
     return {
         'filepath': filepath,
         'task_count': task_count,
+        'include_count': len(includes),
         'errors': errors,
         'warnings': warnings,
         'valid': len(errors) == 0
@@ -88,6 +101,9 @@ def main():
         
         print(f"File: {result['filepath']}")
         print(f"  Tasks: {result['task_count']}")
+        
+        if result.get('include_count', 0) > 0:
+            print(f"  Includes: {result['include_count']}")
         
         if result['errors']:
             all_valid = False
