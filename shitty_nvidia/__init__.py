@@ -3,11 +3,22 @@ shittyNVIDIA - The worst NVIDIA driver ever
 Works with exactly 0 NVIDIA devices
 
 Based on nvidia-compat concepts from HyperionGray/pf-web-poly-compile-helper-runner
+
+Now with comprehensive IOCTL analysis of NVIDIA and AMD open source drivers!
+Because if we're going to be terrible, we should at least understand what we're not doing.
 """
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"  # Upgraded for IOCTL analysis features
 __author__ = "shittyNVIDIA Contributors"
 __license__ = "MIT"
+
+# Import our analysis modules
+try:
+    from .ioctl_analysis import NVIDIAIOCTLAnalyzer, IOCTLCommand, IOCTLDirection
+    from .gpu_comparison import GPUDriverComparator, print_comparison_report
+    ANALYSIS_AVAILABLE = True
+except ImportError:
+    ANALYSIS_AVAILABLE = False
 
 class ShittyNVIDIAError(Exception):
     """Base exception for shittyNVIDIA"""
@@ -139,7 +150,7 @@ def get_driver_info():
     Returns:
         dict: Information about this terrible driver
     """
-    return {
+    info = {
         'name': 'shittyNVIDIA',
         'version': __version__,
         'description': 'The worst NVIDIA driver ever - works with 0 nvidia devices',
@@ -154,7 +165,153 @@ def get_driver_info():
             'No bloatware',
             'Smallest driver footprint possible'
         ],
-        'warning': 'This is shittyNVIDIA. Do not use in production. Or anywhere.'
+        'warning': 'This is shittyNVIDIA. Do not use in production. Or anywhere.',
+        'analysis_features': ANALYSIS_AVAILABLE
+    }
+    
+    if ANALYSIS_AVAILABLE:
+        info['new_features'] = [
+            'Comprehensive NVIDIA IOCTL analysis (nouveau, nvidia-open, CUDA)',
+            'AMD driver IOCTL analysis (amdgpu, radeon)',
+            'GPU driver architecture comparison',
+            'Humorous technical commentary',
+            'Educational insights into what real drivers do'
+        ]
+        info['ioctl_analysis'] = 'Available - analyze what we proudly don\'t implement!'
+    
+    return info
+
+
+def analyze_nvidia_ioctls():
+    """
+    Analyze NVIDIA driver IOCTLs.
+    
+    Returns:
+        dict: Analysis results or error message
+    """
+    if not ANALYSIS_AVAILABLE:
+        return {
+            'error': 'IOCTL analysis modules not available',
+            'suggestion': 'Check if analysis modules are properly installed'
+        }
+    
+    try:
+        analyzer = NVIDIAIOCTLAnalyzer()
+        return {
+            'total_ioctls': len(analyzer.get_all_ioctls()),
+            'drm_ioctls': len(analyzer.drm_ioctls),
+            'nouveau_ioctls': len(analyzer.nouveau_ioctls),
+            'nvidia_open_ioctls': len(analyzer.nvidia_open_ioctls),
+            'cuda_ioctls': len(analyzer.cuda_ioctls),
+            'cuda_analysis': analyzer.analyze_cuda_ioctls(),
+            'categories': {
+                'core': len(analyzer.get_ioctls_by_category('core')),
+                'memory': len(analyzer.get_ioctls_by_category('memory')),
+                'gem': len(analyzer.get_ioctls_by_category('gem')),
+                'cuda': len(analyzer.get_ioctls_by_category('cuda')),
+                'sync': len(analyzer.get_ioctls_by_category('sync')),
+                'execution': len(analyzer.get_ioctls_by_category('execution'))
+            },
+            'shitty_nvidia_comment': 'We implement exactly 0 of these IOCTLs. Efficiency!'
+        }
+    except Exception as e:
+        return {
+            'error': f'Analysis failed: {str(e)}',
+            'shitty_nvidia_comment': 'Even our analysis is broken. Consistent!'
+        }
+
+
+def compare_gpu_drivers():
+    """
+    Compare NVIDIA and AMD GPU drivers.
+    
+    Returns:
+        dict: Comparison results or error message
+    """
+    if not ANALYSIS_AVAILABLE:
+        return {
+            'error': 'GPU comparison modules not available',
+            'suggestion': 'Check if analysis modules are properly installed'
+        }
+    
+    try:
+        comparator = GPUDriverComparator()
+        return comparator.get_comprehensive_report()
+    except Exception as e:
+        return {
+            'error': f'Comparison failed: {str(e)}',
+            'shitty_nvidia_comment': 'We can\'t even compare properly. Peak performance!'
+        }
+
+
+def print_ioctl_analysis():
+    """Print formatted IOCTL analysis"""
+    if not ANALYSIS_AVAILABLE:
+        print("❌ IOCTL analysis not available")
+        print("   Analysis modules could not be imported")
+        return
+    
+    print("🔍 NVIDIA IOCTL ANALYSIS")
+    print("=" * 50)
+    
+    analysis = analyze_nvidia_ioctls()
+    if 'error' in analysis:
+        print(f"❌ Error: {analysis['error']}")
+        return
+    
+    print(f"📊 Total IOCTLs analyzed: {analysis['total_ioctls']}")
+    print(f"   DRM core: {analysis['drm_ioctls']}")
+    print(f"   Nouveau:  {analysis['nouveau_ioctls']}")
+    print(f"   NVIDIA:   {analysis['nvidia_open_ioctls']}")
+    print(f"   CUDA:     {analysis['cuda_ioctls']}")
+    print()
+    
+    print("📈 CUDA Analysis:")
+    cuda = analysis['cuda_analysis']
+    print(f"   Memory operations: {cuda['memory_operations']}")
+    print(f"   Context operations: {cuda['context_operations']}")
+    print(f"   Stream operations: {cuda['stream_operations']}")
+    print(f"   Event operations: {cuda['event_operations']}")
+    print(f"   Kernel operations: {cuda['kernel_operations']}")
+    print(f"   Complexity score: {cuda['complexity_score']:.1f}")
+    print()
+    
+    print("🎭 shittyNVIDIA Commentary:")
+    print(f"   {analysis['shitty_nvidia_comment']}")
+    print()
+    
+    print("💡 Want the full comparison? Try:")
+    print("   import shitty_nvidia")
+    print("   shitty_nvidia.print_comparison_report()")
+
+
+def get_analysis_summary():
+    """Get a summary of analysis capabilities"""
+    if not ANALYSIS_AVAILABLE:
+        return {
+            'available': False,
+            'reason': 'Analysis modules not imported',
+            'features': []
+        }
+    
+    return {
+        'available': True,
+        'features': [
+            'NVIDIA IOCTL analysis (DRM, Nouveau, NVIDIA-open, CUDA)',
+            'AMD IOCTL analysis (DRM, AMDGPU, Radeon)',
+            'GPU driver architecture comparison',
+            'Compute model analysis (CUDA vs ROCm)',
+            'Memory management comparison',
+            'Humorous technical commentary'
+        ],
+        'functions': [
+            'analyze_nvidia_ioctls()',
+            'compare_gpu_drivers()',
+            'print_ioctl_analysis()',
+            'print_comparison_report()'
+        ],
+        'total_ioctls_analyzed': '100+',
+        'shitty_nvidia_implements': 0
     }
 
 
