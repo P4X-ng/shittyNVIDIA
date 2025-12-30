@@ -2,7 +2,7 @@
 
 The worst NVIDIA driver ever - works with 0 nvidia devices, this is: shittyNVIDIA
 
-**🆕 NEW: Now with comprehensive IOCTL analysis of NVIDIA and AMD open source drivers!**
+**🆕 NEW: Now with comprehensive IOCTL analysis AND cross-platform mappings!**
 
 ## Overview
 
@@ -15,6 +15,7 @@ shittyNVIDIA is a humorous "driver" that implements nvidia-compat concepts witho
 - ✅ No bloatware or unnecessary features
 - ✅ Perfect for systems without NVIDIA GPUs
 - 🆕 **Comprehensive IOCTL analysis of NVIDIA and AMD drivers**
+- 🆕 **Cross-platform IOCTL mappings (AMD ↔ NVIDIA ↔ CUDA ↔ CPU)**
 - 🆕 **Educational insights into GPU driver architectures**
 - 🆕 **Humorous technical commentary on driver complexity**
 
@@ -33,12 +34,19 @@ shittyNVIDIA now includes detailed analysis of:
 - **Radeon IOCTLs**: Legacy AMD driver interfaces
 - **ROCm Compute**: AMD's compute platform analysis
 
+### 🆕 IOCTL Mappings
+- **AMD → NVIDIA mapping**: How AMD IOCTLs correspond to NVIDIA operations
+- **CUDA → CPU mapping**: How GPU operations relate to CPU equivalents
+- **Cross-platform equivalents**: Find equivalent operations programmatically
+- **40+ operation mappings** across memory, execution, and synchronization
+
 ### Analysis Capabilities
 - **100+ IOCTLs analyzed** across all major open source GPU drivers
 - **Architecture comparison** between NVIDIA and AMD approaches
 - **Complexity scoring** and categorization
 - **Memory management analysis** (UVM vs HSA)
 - **Compute model comparison** (CUDA vs ROCm/OpenCL)
+- 🆕 **Platform-agnostic operation mapping**
 
 ## Why?
 
@@ -71,6 +79,12 @@ But seriously, if you want to understand how **real** GPU drivers work, we've do
   - CUDA vs ROCm workflows
   - Performance characteristics
   - Developer experience
+
+- 🆕 **[IOCTL Mappings](drivers/IOCTL_MAPPINGS.md)** - Cross-platform operation mappings
+  - **AMD → NVIDIA+CUDA mapping**: See how operations correspond
+  - **CUDA → CPU mapping**: Understand GPU operations via CPU equivalents
+  - Memory management, execution, and synchronization mappings
+  - Practical examples with code snippets
 
 This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD open source GPU drivers, perfect for understanding GPU kernel interfaces, driver development, or just being curious about how your GPU actually talks to the kernel!
 
@@ -174,11 +188,38 @@ print(f"Analysis available: {summary['available']}")
 print(f"Total IOCTLs analyzed: {summary['total_ioctls_analyzed']}")
 ```
 
-### 🎭 Interactive Demo
+### 🆕 IOCTL Mapping API
+
+```python
+import shitty_nvidia
+from shitty_nvidia import OperationCategory
+
+# Find equivalent operations across platforms
+result = shitty_nvidia.find_equivalent_operation('cuda', 'cuMemAlloc')
+print(f"CUDA cuMemAlloc() maps to:")
+print(f"  AMD:    {result['amd']}")      # DRM_IOCTL_AMDGPU_GEM_CREATE
+print(f"  NVIDIA: {result['nvidia']}")   # NV_ESC_RM_ALLOC_MEMORY
+print(f"  CPU:    {result['cpu']}")      # malloc()
+
+# Get all memory allocation mappings
+mappings = shitty_nvidia.get_ioctl_mappings(OperationCategory.MEMORY_ALLOC)
+print(f"Found {mappings['total']} memory operations")
+
+# Print formatted mapping table
+from shitty_nvidia import print_mapping_table, compare_platforms
+
+print_mapping_table(OperationCategory.SYNCHRONIZATION)
+compare_platforms('cuLaunchKernel', 'cuda')
+```
+
+### 🎭 Interactive Demos
 
 ```bash
 # Run the comprehensive IOCTL analysis demo
 python ioctl_demo.py
+
+# Run the cross-platform mapping demo
+python mapping_demo.py
 
 # Run examples with new analysis features
 python examples.py
