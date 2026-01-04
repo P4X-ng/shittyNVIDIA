@@ -32,6 +32,15 @@ This directory contains detailed technical analysis of GPU driver IOCTL interfac
    - Developer experience
    - Use case recommendations
 
+4. **[CUDA to AMD Compatibility](CUDA_AMD_COMPATIBILITY.md)** - `drivers/CUDA_AMD_COMPATIBILITY.md` 🆕
+   - Comprehensive guide to running CUDA code on AMD hardware
+   - Source translation (HIP) - Production ready
+   - Runtime translation (ZLUDA) - Experimental binary compatibility
+   - IOCTL interception layer - Theoretical approach
+   - Unified driver architecture - Long-term vision
+   - Performance analysis and recommendations
+   - Real-world examples and best practices
+
 ## Quick Overview
 
 ### NVIDIA Architecture

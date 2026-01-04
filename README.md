@@ -72,6 +72,13 @@ But seriously, if you want to understand how **real** GPU drivers work, we've do
   - Performance characteristics
   - Developer experience
 
+- **[CUDA to AMD Compatibility Guide](drivers/CUDA_AMD_COMPATIBILITY.md)** - 🆕 Running CUDA on AMD hardware
+  - Source translation with HIP
+  - Runtime translation with ZLUDA
+  - IOCTL interception strategies
+  - Unified driver architecture concepts
+  - Performance considerations and recommendations
+
 This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD open source GPU drivers, perfect for understanding GPU kernel interfaces, driver development, or just being curious about how your GPU actually talks to the kernel!
 
 ## Installation
