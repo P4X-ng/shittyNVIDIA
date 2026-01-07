@@ -48,3 +48,15 @@ htmlcov/
 
 # Logs
 *.log
+
+# Kernel module build artifacts
+nvidia_compat_module/*.o
+nvidia_compat_module/*.ko
+nvidia_compat_module/*.mod
+nvidia_compat_module/*.mod.c
+nvidia_compat_module/*.mod.o
+nvidia_compat_module/.*.cmd
+nvidia_compat_module/.tmp_versions/
+nvidia_compat_module/Module.symvers
+nvidia_compat_module/modules.order
+nvidia_compat_module/.cache.mk
