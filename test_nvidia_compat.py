@@ -13,8 +13,8 @@ DEVICE_PATH = "/dev/nvidia1337"
 
 # NVIDIA IOCTL codes (matching kernel module)
 NV_IOCTL_MAGIC = ord('F')
-NV_ESC_CARD_INFO = 0xC008_4600
-NV_ESC_CHECK_VERSION = 0xC008_4601
+NV_ESC_CARD_INFO = 0xC0084600
+NV_ESC_CHECK_VERSION = 0xC0084601
 
 def test_device_exists():
     """Test if the device node exists"""

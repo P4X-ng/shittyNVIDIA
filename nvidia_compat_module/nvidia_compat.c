@@ -59,6 +59,10 @@ MODULE_PARM_DESC(fake_gpu_memory, "Fake GPU memory size in MB");
 /*
  * Forward IOCTL to real NVIDIA driver
  * Returns 0 on success, negative error code on failure
+ * 
+ * Security Note: This forwards IOCTLs to the real NVIDIA driver without
+ * extensive validation. In a production environment, consider implementing
+ * a whitelist of allowed IOCTL commands to prevent potential security issues.
  */
 static long forward_ioctl_to_real_nvidia(unsigned int cmd, unsigned long arg)
 {
@@ -106,6 +110,7 @@ static long handle_device_query(unsigned long arg)
     memset(&device_info, 0, sizeof(device_info));
     device_info.device_count = 1;
     strncpy(device_info.gpu_name, fake_gpu_name, sizeof(device_info.gpu_name) - 1);
+    device_info.gpu_name[sizeof(device_info.gpu_name) - 1] = '\0'; // Ensure null termination
     device_info.memory_total = (unsigned long)fake_gpu_memory * 1024 * 1024; // Convert to bytes
     device_info.memory_free = device_info.memory_total * 95 / 100; // 95% free
     device_info.gpu_utilization = 5; // 5% utilization
@@ -198,10 +203,12 @@ static ssize_t nvidia_compat_read(struct file *filp, char __user *buf, size_t co
     
     snprintf(message, sizeof(message),
              "NVIDIA Compat Layer\n"
-             "Fake GPU: %s\n"
+             "Fake GPU Status: %s\n"
+             "GPU Name: %s\n"
              "Memory: %d MB\n"
              "Status: Active\n",
              enable_fake_gpu ? "Enabled" : "Disabled",
+             enable_fake_gpu ? fake_gpu_name : "N/A",
              fake_gpu_memory);
     
     message_len = strlen(message);
