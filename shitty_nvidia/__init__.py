@@ -16,9 +16,19 @@ __license__ = "MIT"
 try:
     from .ioctl_analysis import NVIDIAIOCTLAnalyzer, IOCTLCommand, IOCTLDirection
     from .gpu_comparison import GPUDriverComparator, print_comparison_report
+    from .ioctl_mappings import (
+        IOCTLMappingDatabase, 
+        IOCTLMapping, 
+        OperationCategory,
+        print_mapping_table,
+        compare_platforms,
+        print_statistics as print_mapping_statistics
+    )
     ANALYSIS_AVAILABLE = True
+    MAPPINGS_AVAILABLE = True
 except ImportError:
     ANALYSIS_AVAILABLE = False
+    MAPPINGS_AVAILABLE = False
 
 class ShittyNVIDIAError(Exception):
     """Base exception for shittyNVIDIA"""
@@ -174,10 +184,13 @@ def get_driver_info():
             'Comprehensive NVIDIA IOCTL analysis (nouveau, nvidia-open, CUDA)',
             'AMD driver IOCTL analysis (amdgpu, radeon)',
             'GPU driver architecture comparison',
+            'IOCTL mappings: AMD ↔ NVIDIA ↔ CUDA ↔ CPU',
+            'Cross-platform operation equivalents',
             'Humorous technical commentary',
             'Educational insights into what real drivers do'
         ]
         info['ioctl_analysis'] = 'Available - analyze what we proudly don\'t implement!'
+        info['ioctl_mappings'] = 'Available - see how operations map across platforms!'
     
     return info
 
@@ -294,7 +307,7 @@ def get_analysis_summary():
             'features': []
         }
     
-    return {
+    summary = {
         'available': True,
         'features': [
             'NVIDIA IOCTL analysis (DRM, Nouveau, NVIDIA-open, CUDA)',
@@ -313,6 +326,97 @@ def get_analysis_summary():
         'total_ioctls_analyzed': '100+',
         'shitty_nvidia_implements': 0
     }
+    
+    if MAPPINGS_AVAILABLE:
+        summary['features'].extend([
+            'IOCTL mappings across AMD, NVIDIA, CUDA, and CPU',
+            'Cross-platform operation equivalents',
+            'Find equivalent operations programmatically'
+        ])
+        summary['functions'].extend([
+            'get_ioctl_mappings()',
+            'find_equivalent_operation()',
+            'print_mapping_table()',
+            'compare_platforms()'
+        ])
+    
+    return summary
+
+
+def get_ioctl_mappings(category=None):
+    """
+    Get IOCTL mappings between platforms
+    
+    Args:
+        category: Optional OperationCategory to filter by
+    
+    Returns:
+        dict: Mapping information or error message
+    """
+    if not MAPPINGS_AVAILABLE:
+        return {
+            'error': 'IOCTL mapping modules not available',
+            'suggestion': 'Check if mapping modules are properly installed'
+        }
+    
+    try:
+        db = IOCTLMappingDatabase()
+        
+        if category:
+            mappings = db.get_by_category(category)
+        else:
+            mappings = db.mappings
+        
+        result = []
+        for m in mappings:
+            result.append({
+                'category': m.category.value,
+                'amd': m.amd_ioctl,
+                'nvidia': m.nvidia_ioctl,
+                'cuda': m.cuda_api,
+                'cpu': m.cpu_equivalent,
+                'description': m.description
+            })
+        
+        return {
+            'total': len(result),
+            'mappings': result,
+            'shitty_nvidia_comment': f'We map {len(result)} operations that we don\'t implement!'
+        }
+    except Exception as e:
+        return {
+            'error': f'Mapping retrieval failed: {str(e)}',
+            'shitty_nvidia_comment': 'Even our mappings are broken. Classic!'
+        }
+
+
+def find_equivalent_operation(platform, operation):
+    """
+    Find equivalent operations across all platforms
+    
+    Args:
+        platform: One of 'amd', 'nvidia', 'cuda', 'cpu'
+        operation: The operation name (e.g., 'cuMemAlloc')
+    
+    Returns:
+        dict: Equivalents across platforms or error message
+    """
+    if not MAPPINGS_AVAILABLE:
+        return {
+            'error': 'IOCTL mapping modules not available',
+            'suggestion': 'Check if mapping modules are properly installed'
+        }
+    
+    try:
+        db = IOCTLMappingDatabase()
+        result = db.find_equivalent(platform, operation)
+        result['shitty_nvidia'] = 'Not implemented (by design)'
+        return result
+    except Exception as e:
+        return {
+            'error': f'Operation lookup failed: {str(e)}',
+            'shitty_nvidia_comment': 'We can\'t even find things properly. Perfect!'
+        }
 
 
 # Compatibility aliases mimicking real nvidia modules

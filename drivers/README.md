@@ -32,6 +32,12 @@ This directory contains detailed technical analysis of GPU driver IOCTL interfac
    - Developer experience
    - Use case recommendations
 
+4. 🆕 **[IOCTL Mappings](IOCTL_MAPPINGS.md)** - `drivers/IOCTL_MAPPINGS.md`
+   - Cross-platform operation mappings (AMD ↔ NVIDIA ↔ CUDA ↔ CPU)
+   - Memory management operation equivalents
+   - Execution and synchronization mappings
+   - Practical examples with code snippets
+   - Performance comparison tables
 4. **[CUDA to AMD Compatibility](CUDA_AMD_COMPATIBILITY.md)** - `drivers/CUDA_AMD_COMPATIBILITY.md` 🆕
    - Comprehensive guide to running CUDA code on AMD hardware
    - Source translation (HIP) - Production ready
@@ -141,6 +147,7 @@ Start with the comparison document if you want a high-level overview, then dive 
 1. **Start Here**: [COMPARISON.md](COMPARISON.md) - Get the big picture
 2. **NVIDIA Deep Dive**: [nvidia/README.md](nvidia/README.md) - For CUDA developers
 3. **AMD Deep Dive**: [amd/README.md](amd/README.md) - For ROCm developers
+4. 🆕 **Cross-Platform Mappings**: [IOCTL_MAPPINGS.md](IOCTL_MAPPINGS.md) - See how operations correspond across platforms
 
 ## Real-World Applications
 
