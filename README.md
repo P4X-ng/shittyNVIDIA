@@ -117,12 +117,22 @@ But seriously, if you want to understand how **real** GPU drivers work, we've do
   - **CUDA → CPU mapping**: Understand GPU operations via CPU equivalents
   - Memory management, execution, and synchronization mappings
   - Practical examples with code snippets
-- **[CUDA to AMD Compatibility Guide](drivers/CUDA_AMD_COMPATIBILITY.md)** - 🆕 Running CUDA on AMD hardware
+
+- **[CUDA to AMD Compatibility Guide](drivers/CUDA_AMD_COMPATIBILITY.md)** - Running CUDA on AMD hardware
   - Source translation with HIP
   - Runtime translation with ZLUDA
   - IOCTL interception strategies
   - Unified driver architecture concepts
   - Performance considerations and recommendations
+
+- 🎯 **[IOCTL Forwarding Architecture](IOCTL_FORWARDING_ARCHITECTURE.md)** - 🆕 Hybrid NVIDIA-AMD compatibility layer design
+  - **The Router Concept**: Trick Linux into routing to our layer instead of NVIDIA driver
+  - **OSS NVIDIA Integration**: Use NVIDIA's open source driver as a component
+  - **CUDA IOCTL Forwarding**: Forward CUDA IOCTLs, translate hardware operations to AMD
+  - **Technical Architecture**: Complete system design with diagrams
+  - **Implementation Techniques**: Device hijacking, intermediate representation, PTX translation
+  - **Advantages & Trade-offs**: Comprehensive comparison with HIP, ZLUDA, and unified driver approaches
+  - **Feasibility Assessment**: Realistic evaluation of complexity and practicality
 
 This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD open source GPU drivers, perfect for understanding GPU kernel interfaces, driver development, or just being curious about how your GPU actually talks to the kernel!
 
