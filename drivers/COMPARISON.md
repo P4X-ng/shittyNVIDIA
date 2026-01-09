@@ -442,8 +442,10 @@ The choice depends on:
 - Performance requirements
 - Development preferences
 
-For **maximum performance and ecosystem**: NVIDIA CUDA
+For **maximum performance and ecosystem**: NVIDIA CUDA  
 For **maximum openness and integration**: AMD AMDGPU
+
+**Want to run CUDA code on AMD hardware?** See our comprehensive [CUDA to AMD Compatibility Guide](CUDA_AMD_COMPATIBILITY.md) covering HIP translation, ZLUDA, and other compatibility approaches.
 
 ## References
 
