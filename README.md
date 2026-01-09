@@ -4,6 +4,8 @@ The worst NVIDIA driver ever - works with 0 nvidia devices, this is: shittyNVIDI
 
 **🆕 NEW: Now with comprehensive IOCTL analysis AND cross-platform mappings!**
 
+**🎉 NEWEST: Real kernel module (`nvidia_compat.ko`) with IOCTL forwarding and fake GPU support!**
+
 ## Overview
 
 shittyNVIDIA is a humorous "driver" that implements nvidia-compat concepts without actually doing anything useful. Based on code patterns from [HyperionGray/pf-web-poly-compile-helper-runner](https://github.com/HyperionGray/pf-web-poly-compile-helper-runner), this project demonstrates what happens when you take NVIDIA compatibility seriously... but backwards.
@@ -18,6 +20,36 @@ shittyNVIDIA is a humorous "driver" that implements nvidia-compat concepts witho
 - 🆕 **Cross-platform IOCTL mappings (AMD ↔ NVIDIA ↔ CUDA ↔ CPU)**
 - 🆕 **Educational insights into GPU driver architectures**
 - 🆕 **Humorous technical commentary on driver complexity**
+- 🎉 **Real kernel module with IOCTL forwarding**
+- 🎉 **Fake GPU device (`/dev/nvidia1337`) for fun and testing**
+- 🎉 **CUDA IOCTL forwarding support**
+
+## NEW: nvidia_compat.ko Kernel Module
+
+We've added a **real kernel module** that creates `/dev/nvidia1337` and provides:
+
+### Features
+- **IOCTL Forwarding**: Forwards IOCTLs to real NVIDIA driver (`/dev/nvidia0`) if available
+- **Fake GPU Mode**: Emulates a fake GPU with configurable specs when no real driver exists
+- **nvidia-smi Compatible**: Shows up in nvidia-smi with realistic stats
+- **CUDA Support**: Forwards CUDA runtime IOCTLs for actual GPU compute
+- **Configurable**: Fake GPU name, memory size, and stats are customizable
+
+### Quick Start
+```bash
+# Build and load the kernel module
+cd nvidia_compat_module
+make
+sudo make load
+
+# Verify device was created
+ls -la /dev/nvidia1337
+
+# Test the module
+python3 ../test_nvidia_compat.py
+```
+
+📚 **[Full Kernel Module Documentation](nvidia_compat_module/README.md)**
 
 ## New IOCTL Analysis Features
 
@@ -85,6 +117,12 @@ But seriously, if you want to understand how **real** GPU drivers work, we've do
   - **CUDA → CPU mapping**: Understand GPU operations via CPU equivalents
   - Memory management, execution, and synchronization mappings
   - Practical examples with code snippets
+- **[CUDA to AMD Compatibility Guide](drivers/CUDA_AMD_COMPATIBILITY.md)** - 🆕 Running CUDA on AMD hardware
+  - Source translation with HIP
+  - Runtime translation with ZLUDA
+  - IOCTL interception strategies
+  - Unified driver architecture concepts
+  - Performance considerations and recommendations
 
 This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD open source GPU drivers, perfect for understanding GPU kernel interfaces, driver development, or just being curious about how your GPU actually talks to the kernel!
 
@@ -93,10 +131,21 @@ This comprehensive analysis covers the IOCTL interfaces for both NVIDIA and AMD 
 ### Requirements
 
 - **NO NVIDIA hardware** (seriously, this is required)
-- Linux system
+- Linux system (Ubuntu/Debian recommended)
 - Bash
 - Python 3.6+
 - A sense of humor
+- **For kernel module**: Linux kernel headers and build tools
+
+### Install Kernel Headers (for kernel module)
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y linux-headers-$(uname -r) build-essential
+
+# The installer will automatically build and install the module if headers are present
+```
 
 ### Quick Install
 
@@ -223,9 +272,52 @@ python mapping_demo.py
 
 # Run examples with new analysis features
 python examples.py
+
+# Test the kernel module
+python test_nvidia_compat.py
 ```
 
 ## Technical Details
+
+### Kernel Module Architecture
+
+The `nvidia_compat.ko` kernel module provides:
+
+```
+User Application (CUDA/nvidia-smi)
+        |
+        | IOCTL
+        v
+/dev/nvidia1337 (nvidia_compat.ko)
+        |
+        +---> Real NVIDIA Driver Present?
+        |           |
+        |          Yes --> Forward to /dev/nvidia0
+        |           |
+        |          No --> Fake GPU Enabled?
+        |                     |
+        |                    Yes --> Return Fake Data
+        |                     |
+        |                    No --> Return Error
+        v
+   Application receives response
+```
+
+**Key Components:**
+- Character device driver at `/dev/nvidia1337`
+- IOCTL handler that intercepts NVIDIA/CUDA commands
+- Forwarding mechanism to real NVIDIA driver
+- Fake GPU data generator for testing
+- Module parameters for runtime configuration
+
+**Supported IOCTLs:**
+- `NV_ESC_CARD_INFO` - GPU information queries
+- `NV_ESC_CHECK_VERSION` - Driver version checks
+- `UVM_INITIALIZE` - CUDA Unified Virtual Memory init
+- `UVM_CREATE_RANGE_GROUP` - CUDA memory management
+- And more... (forwards all IOCTLs to real driver if available)
+
+### Technical Details (Original)
 
 ### What It Does
 
