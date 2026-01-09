@@ -46,6 +46,57 @@ check_nvidia_not_present() {
     log_success "Confirmed: No NVIDIA devices found. Perfect!"
 }
 
+install_kernel_module() {
+    log_info "Installing nvidia_compat kernel module..."
+    
+    # Check if kernel headers are installed
+    if [ ! -d "/lib/modules/$(uname -r)/build" ]; then
+        log_warning "Kernel headers not found. Skipping kernel module installation."
+        log_warning "To install kernel headers: sudo apt-get install linux-headers-\$(uname -r)"
+        return 0
+    fi
+    
+    # Build the kernel module if needed
+    if [ -d "nvidia_compat_module" ]; then
+        log_info "Building nvidia_compat kernel module..."
+        (cd nvidia_compat_module && make) || {
+            log_warning "Failed to build kernel module. Continuing without it."
+            return 0
+        }
+        
+        # Install the module
+        log_info "Installing nvidia_compat.ko..."
+        sudo cp nvidia_compat_module/nvidia_compat.ko /lib/modules/$(uname -r)/extra/ || {
+            sudo mkdir -p /lib/modules/$(uname -r)/extra/
+            sudo cp nvidia_compat_module/nvidia_compat.ko /lib/modules/$(uname -r)/extra/
+        }
+        
+        # Update module dependencies
+        sudo depmod -A
+        
+        # Create module load configuration
+        echo "nvidia_compat" | sudo tee /etc/modules-load.d/nvidia_compat.conf > /dev/null
+        
+        # Set module parameters
+        cat << 'EOF' | sudo tee /etc/modprobe.d/nvidia_compat.conf > /dev/null
+# nvidia_compat module configuration
+options nvidia_compat enable_fake_gpu=1 fake_gpu_name="GeForce_RTX_4090_(Fake)" fake_gpu_memory=24576
+EOF
+        
+        # Try to load the module
+        if sudo modprobe nvidia_compat 2>/dev/null; then
+            log_success "Kernel module loaded successfully!"
+            if [ -e /dev/nvidia1337 ]; then
+                log_success "Device /dev/nvidia1337 created!"
+            fi
+        else
+            log_warning "Could not load kernel module. You may need to load it manually with: sudo modprobe nvidia_compat"
+        fi
+    else
+        log_warning "nvidia_compat_module directory not found. Skipping kernel module installation."
+    fi
+}
+
 install_shitty_nvidia() {
     log_info "Installing shittyNVIDIA - The worst NVIDIA driver ever..."
     
@@ -167,6 +218,18 @@ EOF
 uninstall_shitty_nvidia() {
     log_info "Uninstalling shittyNVIDIA..."
     
+    # Unload kernel module if loaded
+    if lsmod | grep -q nvidia_compat; then
+        log_info "Unloading nvidia_compat kernel module..."
+        sudo rmmod nvidia_compat 2>/dev/null || log_warning "Could not unload kernel module"
+    fi
+    
+    # Remove kernel module files
+    sudo rm -f /lib/modules/$(uname -r)/extra/nvidia_compat.ko
+    sudo rm -f /etc/modules-load.d/nvidia_compat.conf
+    sudo rm -f /etc/modprobe.d/nvidia_compat.conf
+    sudo depmod -A
+    
     sudo rm -rf /usr/local/shittyNVIDIA
     sudo rm -f /etc/modprobe.d/shitty-nvidia-blacklist.conf
     
@@ -185,6 +248,7 @@ main() {
             log_info "Starting shittyNVIDIA installation..."
             check_nvidia_not_present
             install_shitty_nvidia
+            install_kernel_module
             configure_environment
             test_installation
             echo ""

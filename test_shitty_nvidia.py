@@ -24,7 +24,7 @@ class TestShittyNVIDIA(unittest.TestCase):
         """Test driver version is set"""
         version = shitty_nvidia.get_driver_version()
         self.assertIsInstance(version, str)
-        self.assertEqual(version, "0.0.0")
+        self.assertEqual(version, "0.1.0")
     
     def test_cuda_not_available(self):
         """Test that CUDA is not available"""
@@ -46,7 +46,7 @@ class TestShittyNVIDIA(unittest.TestCase):
         info = shitty_nvidia.get_driver_info()
         self.assertIsInstance(info, dict)
         self.assertEqual(info['name'], 'shittyNVIDIA')
-        self.assertEqual(info['version'], '0.0.0')
+        self.assertEqual(info['version'], '0.1.0')
         self.assertEqual(info['supported_devices'], 0)
         self.assertFalse(info['cuda_support'])
         self.assertFalse(info['opencl_support'])
@@ -67,7 +67,7 @@ class TestShittyNVIDIA(unittest.TestCase):
     
     def test_driver_get_version_alias(self):
         """Test alias function"""
-        self.assertEqual(shitty_nvidia.driver_get_version(), "0.0.0")
+        self.assertEqual(shitty_nvidia.driver_get_version(), "0.1.0")
     
     def test_is_available(self):
         """Test installation check"""
@@ -107,7 +107,7 @@ class TestModuleMetadata(unittest.TestCase):
     def test_version_attribute(self):
         """Test __version__ attribute exists"""
         self.assertTrue(hasattr(shitty_nvidia, '__version__'))
-        self.assertEqual(shitty_nvidia.__version__, '0.0.0')
+        self.assertEqual(shitty_nvidia.__version__, '0.1.0')
     
     def test_author_attribute(self):
         """Test __author__ attribute exists"""
