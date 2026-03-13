@@ -11,8 +11,30 @@ if ! command -v "$python_bin" >/dev/null 2>&1; then
   exit 1
 fi
 
+install_venv_support() {
+  local python_version
+  python_version="$("$python_bin" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')"
+
+  if ! command -v apt-get >/dev/null 2>&1; then
+    echo "error: python venv support is missing and apt-get is unavailable" >&2
+    exit 1
+  fi
+
+  if command -v sudo >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y python3-venv || sudo apt-get install -y "python${python_version}-venv"
+  else
+    apt-get update
+    apt-get install -y python3-venv || apt-get install -y "python${python_version}-venv"
+  fi
+}
+
 if [ ! -d ".venv" ]; then
-  "$python_bin" -m venv .venv
+  if ! "$python_bin" -m venv .venv; then
+    rm -rf .venv
+    install_venv_support
+    "$python_bin" -m venv .venv
+  fi
 fi
 
 # Reuse a persistent virtualenv so repeated environment boots stay fast.
