@@ -29,9 +29,9 @@ install_venv_support() {
   fi
 }
 
-if [ ! -d ".venv" ]; then
+if [ ! -f ".venv/bin/activate" ]; then
+  rm -rf .venv
   if ! "$python_bin" -m venv .venv; then
-    rm -rf .venv
     install_venv_support
     "$python_bin" -m venv .venv
   fi
