@@ -87,6 +87,7 @@ static long forward_ioctl_to_real_nvidia(unsigned int cmd, unsigned long arg)
 
 /*
  * Handle nvidia-smi query IOCTLs with fake or real data
+ * Updated to spoof real VRAM sizes down to a uniform cluster standard!
  */
 static long handle_device_query(unsigned long arg)
 {
@@ -102,21 +103,65 @@ static long handle_device_query(unsigned long arg)
     } device_info;
     
     if (!enable_fake_gpu) {
-        /* Try to get real data */
-        return forward_ioctl_to_real_nvidia(NV_ESC_CARD_INFO, arg);
+        /* 
+         * 1. CALL THE REAL DRIVER FIRST
+         * Let the real NVIDIA kernel populate the device_info struct inside user-space memory
+         */
+        long ret = forward_ioctl_to_real_nvidia(NV_ESC_CARD_INFO, arg);
+        if (ret < 0) {
+            return ret; // If the real driver errored out, bubble it up
+        }
+
+        /* 
+         * 2. INTERCEPT AND OVERWRITE 
+         * Pull the real hardware data back into kernel space so we can manipulate it
+         */
+        if (copy_from_user(&device_info, (void __user *)arg, sizeof(device_info))) {
+            return -EFAULT;
+        }
+
+        /* 
+         * 3. ENFORCE UNIFORM CLUSTER BASELINE
+         * Calculate target bytes based on your module param 'fake_gpu_memory' (e.g., 8192 MB)
+         */
+        unsigned long uniform_vram_bytes = (unsigned long)fake_gpu_memory * 1024 * 1024;
+        
+        // If the physical card is larger than our cluster standard, mask it!
+        if (device_info.memory_total > uniform_vram_bytes) {
+            unsigned long consumed_vram = device_info.memory_total - device_info.memory_free;
+            
+            device_info.memory_total = uniform_vram_bytes;
+            
+            // Adjust free memory metrics so math adds up for the orchestrator
+            if (consumed_vram < uniform_vram_bytes) {
+                device_info.memory_free = uniform_vram_bytes - consumed_vram;
+            } else {
+                device_info.memory_free = 0; // Hard cap if somehow over-allocated
+            }
+        }
+
+        /* 
+         * 4. SHIP IT BACK TO PYTORCH / vLLM
+         * Shove the modified uniform layout back into user-space
+         */
+        if (copy_to_user((void __user *)arg, &device_info, sizeof(device_info))) {
+            return -EFAULT;
+        }
+
+        return 0;
     }
     
-    /* Provide fake GPU data */
+    /* Provide fake GPU data (Your original pure-emulation code remains untouched) */
     memset(&device_info, 0, sizeof(device_info));
     device_info.device_count = 1;
     strncpy(device_info.gpu_name, fake_gpu_name, sizeof(device_info.gpu_name) - 1);
-    device_info.gpu_name[sizeof(device_info.gpu_name) - 1] = '\0'; // Ensure null termination
-    device_info.memory_total = (unsigned long)fake_gpu_memory * 1024 * 1024; // Convert to bytes
-    device_info.memory_free = device_info.memory_total * 95 / 100; // 95% free
-    device_info.gpu_utilization = 5; // 5% utilization
+    device_info.gpu_name[sizeof(device_info.gpu_name) - 1] = '\0'; 
+    device_info.memory_total = (unsigned long)fake_gpu_memory * 1024 * 1024; 
+    device_info.memory_free = device_info.memory_total * 95 / 100; 
+    device_info.gpu_utilization = 5; 
     device_info.memory_utilization = 5;
-    device_info.temperature = 35; // 35°C
-    device_info.power_draw = 25; // 25W
+    device_info.temperature = 35; 
+    device_info.power_draw = 25; 
     
     if (copy_to_user((void __user *)arg, &device_info, sizeof(device_info))) {
         return -EFAULT;
@@ -124,7 +169,6 @@ static long handle_device_query(unsigned long arg)
     
     return 0;
 }
-
 /*
  * Device open handler
  */
