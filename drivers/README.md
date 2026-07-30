@@ -32,13 +32,14 @@ This directory contains detailed technical analysis of GPU driver IOCTL interfac
    - Developer experience
    - Use case recommendations
 
-4. 🆕 **[IOCTL Mappings](IOCTL_MAPPINGS.md)** - `drivers/IOCTL_MAPPINGS.md`
+4. **[IOCTL Mappings](IOCTL_MAPPINGS.md)** - `drivers/IOCTL_MAPPINGS.md`
    - Cross-platform operation mappings (AMD ↔ NVIDIA ↔ CUDA ↔ CPU)
    - Memory management operation equivalents
    - Execution and synchronization mappings
    - Practical examples with code snippets
    - Performance comparison tables
-4. **[CUDA to AMD Compatibility](CUDA_AMD_COMPATIBILITY.md)** - `drivers/CUDA_AMD_COMPATIBILITY.md` 🆕
+
+5. **[CUDA to AMD Compatibility](CUDA_AMD_COMPATIBILITY.md)** - `drivers/CUDA_AMD_COMPATIBILITY.md`
    - Comprehensive guide to running CUDA code on AMD hardware
    - Source translation (HIP) - Production ready
    - Runtime translation (ZLUDA) - Experimental binary compatibility
@@ -46,6 +47,16 @@ This directory contains detailed technical analysis of GPU driver IOCTL interfac
    - Unified driver architecture - Long-term vision
    - Performance analysis and recommendations
    - Real-world examples and best practices
+
+6. **[IOCTL Forwarding Architecture](../IOCTL_FORWARDING_ARCHITECTURE.md)** - Root directory 🆕
+   - **Hybrid NVIDIA-AMD compatibility layer design**
+   - The Router Concept: Trick Linux into routing to our layer instead of NVIDIA driver
+   - OSS NVIDIA Integration: Use NVIDIA's open source driver as a component
+   - CUDA IOCTL Forwarding: Forward CUDA IOCTLs, translate hardware operations to AMD
+   - Complete technical architecture with detailed diagrams
+   - Implementation techniques and code examples
+   - Comprehensive advantages/disadvantages analysis
+   - Feasibility assessment and practical recommendations
 
 ## Quick Overview
 
