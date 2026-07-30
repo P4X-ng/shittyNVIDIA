@@ -1,0 +1,115 @@
+# GPU Disaster Tasks
+# For when you really want to see everything fail
+
+task gpu-compute-fail
+  describe Run GPU compute workload (instant failure)
+  shell_lang bash
+  shell echo "Starting GPU compute..." && \
+        echo "Initializing CUDA context... FAILED" && \
+        echo "Allocating GPU memory... FAILED" && \
+        echo "Launching kernel... FAILED" && \
+        echo "Getting results... FAILED" && \
+        echo "Maintaining sanity... FAILED"
+end
+
+task gpu-graphics-test
+  describe Test graphics rendering capabilities
+  shell_lang bash
+  shell echo "Testing graphics pipeline..." && \
+        echo "OpenGL version: 0.0" && \
+        echo "Vulkan support: No" && \
+        echo "DirectX compatibility: Negative" && \
+        echo "Can render black screen: Yes!" && \
+        echo "Can render anything else: No"
+end
+
+task gpu-multi-gpu-disaster
+  describe Test multi-GPU setup (multiplies failures)
+  shell_lang bash
+  shell echo "Detecting GPUs for SLI/CrossFire..." && \
+        echo "GPU 0: Not found" && \
+        echo "GPU 1: Not found" && \
+        echo "GPU 2: Not found" && \
+        echo "Multi-GPU setup: 0 GPUs detected" && \
+        echo "Success! No GPUs means no GPU conflicts!"
+end
+
+task gpu-machine-learning-fail
+  describe Run ML workload (fails at training)
+  shell_lang bash
+  shell echo "Starting TensorFlow..." && \
+        echo "ERROR: No CUDA-capable device detected" && \
+        echo "Falling back to CPU... ERROR: Out of patience" && \
+        echo "Training progress: 0%" && \
+        echo "ETA: Never" && \
+        echo "Model accuracy: Undefined"
+end
+
+task gpu-ray-tracing
+  describe Test ray tracing capabilities
+  shell_lang bash
+  shell echo "Enabling RTX..." && \
+        echo "RTX cores: 0" && \
+        echo "Ray tracing performance: 0 rays/second" && \
+        echo "Can trace rays: No" && \
+        echo "Can trace fingers: Also no" && \
+        echo "Graphics quality: Potato mode disabled (too advanced)"
+end
+
+task gpu-video-encoding
+  describe Test hardware video encoding
+  shell_lang bash
+  shell echo "Starting NVENC..." && \
+        echo "ERROR: Encoder not found" && \
+        echo "Trying to encode video..." && \
+        echo "Progress: 0%" && \
+        echo "Output: Corrupted static" && \
+        echo "Your video is now abstract art"
+end
+
+task gpu-mining-attempt
+  describe Attempt cryptocurrency mining (fails immediately)
+  shell_lang bash
+  shell echo "Starting mining operation..." && \
+        echo "Hashrate: 0 H/s" && \
+        echo "Power consumption: Still 300W somehow" && \
+        echo "Mining efficiency: Negative" && \
+        echo "Coins mined: -1 (You now owe the blockchain)" && \
+        echo "Recommendation: Try CPU mining (also won't work)"
+end
+
+task gpu-virtual-reality
+  describe Test VR capabilities
+  shell_lang bash
+  shell echo "Initializing VR..." && \
+        echo "ERROR: GPU too weak for VR" && \
+        echo "ERROR: GPU doesn't exist" && \
+        echo "ERROR: Reality itself is virtual" && \
+        echo "Latency: Infinite" && \
+        echo "Motion sickness: Guaranteed (even without VR)"
+end
+
+task gpu-overclocking-disaster
+  describe Overclock GPU (breaks immediately)
+  shell_lang bash
+  shell echo "Attempting overclock..." && \
+        echo "Base clock: Unknown" && \
+        echo "Target clock: 0 MHz (underclocked to nonexistence)" && \
+        echo "Voltage: Random" && \
+        echo "Result: GPU has achieved quantum state" && \
+        echo "Warning: GPU simultaneously exists and doesn't exist"
+end
+
+task gpu-monitoring-lies
+  describe Monitor GPU metrics (returns pure fiction)
+  shell_lang bash
+  shell echo "GPU Monitoring Dashboard:" && \
+        echo "═══════════════════════════" && \
+        echo "GPU Usage: -50%" && \
+        echo "Memory Usage: 110% of 0 MB" && \
+        echo "Temperature: i°C (imaginary number)" && \
+        echo "Power Draw: ∞ watts" && \
+        echo "Driver Status: Missing, presumed dead" && \
+        echo "System Stability: Laughable" && \
+        echo "═══════════════════════════"
+end

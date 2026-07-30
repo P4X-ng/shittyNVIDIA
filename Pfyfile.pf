@@ -1,0 +1,40 @@
+# shittyNVIDIA Task Runner
+# The worst NVIDIA driver automation ever - works with 0 nvidia devices
+
+# Include NVIDIA-specific tasks
+include Pfyfile.nvidia-fail.pf
+include Pfyfile.driver-chaos.pf
+include Pfyfile.gpu-disaster.pf
+
+task check-nvidia
+  describe Check if NVIDIA driver is installed (spoiler: it won't work)
+  shell_lang bash
+  shell echo "Checking for NVIDIA devices..." && \
+        lspci | grep -i nvidia || echo "Success! No NVIDIA devices found. shittyNVIDIA works perfectly!"
+end
+
+task install-shitty-driver
+  describe Install the shittiest NVIDIA driver ever
+  shell_lang bash
+  shell echo "Installing shittyNVIDIA..." && \
+        echo "ERROR: This driver is so bad it refuses to install itself" && \
+        echo "Congratulations! Installation failed successfully."
+end
+
+task test-driver
+  describe Test driver functionality (guaranteed to fail)
+  shell_lang bash
+  shell echo "Testing shittyNVIDIA driver..." && \
+        echo "Test 1: Detect GPU... FAIL" && \
+        echo "Test 2: Initialize CUDA... FAIL" && \
+        echo "Test 3: Run anything... FAIL" && \
+        echo "All tests passed! Driver is working as intended (not working at all)."
+end
+
+task uninstall-driver
+  describe Uninstall shittyNVIDIA (you probably want this)
+  shell_lang bash
+  shell echo "Uninstalling shittyNVIDIA..." && \
+        echo "Good choice! This driver was designed to fail anyway." && \
+        echo "Uninstall complete. Your system is now slightly less broken."
+end
